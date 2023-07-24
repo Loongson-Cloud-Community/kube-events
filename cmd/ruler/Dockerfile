@@ -1,9 +1,10 @@
-FROM golang:1.13.5 as builder
+FROM cr.loongnix.cn/library/golang:1.19 as builder
 WORKDIR /workspace
 COPY . .
+ENV GOPROXY=https://goproxy.cn,direct
 RUN CGO_ENABLED=0 GO111MODULE=on go build -a -o ./bin/kube-events-ruler ./cmd/ruler/main.go
 
-FROM alpine:3.9
+FROM cr.loongnix.cn/library/alpine:3.11
 WORKDIR /
 COPY --from=builder /workspace/bin/kube-events-ruler /usr/local/bin/kube-events-ruler
 
